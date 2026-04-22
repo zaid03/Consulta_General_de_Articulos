@@ -180,6 +180,9 @@ export class DashboardComponent implements OnInit {
       case 'Carticulos':
         this.router.navigate(['/Carticulos']);
         break;
+      case 'CGArticulos':
+        this.router.navigate(['/CGArticulos']);
+        break;
       default:
         break;
     }
