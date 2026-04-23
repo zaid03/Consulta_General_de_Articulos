@@ -9,5 +9,19 @@
 .search-options input[type="radio"] {margin: 0 6px 0 0; accent-color: #25176b; width: 18px; height: 18px; vertical-align: middle; outline: none; box-shadow: none;}
 /* search container and inputs */
 /* table styles */
-
+tr.bloqueado {background-color: #aaa;}
 /* table styles */
+/* detail style */
+.smallTextArea {width: 80px; max-width: 85px;}
+.tallText {width: 250px;}
+.detail-container {border: 1px solid green; display: flex; gap: 10px; flex-wrap: wrap;}
+.chunk-one,
+.chunk-two {border: 1px solid red; width: 40%; display: flex; gap: 10px;}
+.adjustedWidth {width: 18%;}
+.adjustedWidth .left,
+.adjustedWidthSecond .left {width: 60%;}
+.adjustedWidthSecond {width: 22%;}
+.left {border: 1px solid blue; width: 20%; display: flex; flex-direction: column; gap: 20px;}
+.right {border: 1px solid magenta; width: 80%; display: flex; flex-direction: column; gap: 18px;}
+.on-two {display: flex; gap: 10px;}
+/* detail style */
