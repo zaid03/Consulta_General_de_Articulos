@@ -1,1 +1,149 @@
-<p>consulta-general-articulos works!</p>
+<div class="main-page">
+    <div 
+        class="sidebar-backdrop" 
+        *ngIf="!sidebar.collapsed" 
+        (click)="sidebar.collapsed = true"
+    >
+    </div>
+    <app-sidebar #sidebar></app-sidebar>
+    <div class="main-container" [class.blurred]="!sidebar.collapsed">
+        <div class="title-menu">
+            <div class="title-area">
+                <h2 class="margin-title">Consulta analîtica de familias</h2>  
+            </div>
+            <div class="search-holder">
+                <div class="search-container">
+                    <div class="search-form">
+                        <span>Buscar</span>
+                        <input 
+                            type="text"   
+                            class="search-bar" 
+                        />
+                        <span>Familia</span>
+                        <input 
+                            type="text" 
+                            class="search-bar smallWidth" 
+                            name="familia"
+                        >
+                        <span>Subfamilia</span>
+                        <input 
+                            type="text" 
+                            name="subfamilia" 
+                            class="search-bar smallWidth"
+                        />
+                        <div class="search-options">
+                            <label>
+                                <input 
+                                    type="radio" 
+                                    name="optiones" 
+                                    value="todos" 
+                                     
+                                /> Todos
+                                <input 
+                                    type="radio" 
+                                    name="optiones" 
+                                    value="Nobloqueado" 
+                                     
+                                /> No Bloqueados
+                                <input 
+                                    type="radio" 
+                                    name="optiones" 
+                                    value="bloqueado" 
+                                      
+                                /> Bloqueados
+                            </label>
+                        </div>                    
+                    </div>
+                    <div class="btns">
+                        <button type="button" class="purple-btn" >Buscar</button>
+                        <button type="button" class="purple-btn" >Limpiar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="group-menu" (click)="toggleMenu($event)">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="menu-panel" *ngIf="showMenu">
+                    <button class="purple-btn" >Exportar a PDF</button>
+                    <button class="purple-btn" >Exportar a EXCEL</button>
+                </div>
+            </div>
+        </div>
+        <h1 class="errorBtn">{{articuloError}}</h1>
+        <h1 class="successBtn">{{articuloSuccess}}</h1>
+        <div class="main-list">
+            <div *ngIf="isLoading" class="loading-message">
+                <div class="spinner"></div>
+                <span>Cargando</span>
+            </div>
+            <table class="main-table">
+                <thead>
+                    <tr>
+                        <th class="sortable resizable" (click)="toggleSort('afacod')">
+                            Familia
+                            <span class="sort-indicator" *ngIf="sortColumn === 'afacod'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                            <div class="resizer" (mousedown)="startResize($event, 0)"></div>
+                        </th>
+                        <th class="sortable resizable" (click)="toggleSort('asucod')">
+                            Subfamilia
+                            <span class="sort-indicator" *ngIf="sortColumn === 'asucod'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                            <div class="resizer" (mousedown)="startResize($event, 1)"></div>
+                        </th>
+                        <th class="sortable resizable" (click)="toggleSort('artcod')">
+                            Código
+                            <span class="sort-indicator" *ngIf="sortColumn === 'artcod'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                            <div class="resizer" (mousedown)="startResize($event, 2)"></div>
+                        </th>
+                        <th class="sortable resizable" (click)="toggleSort('artdes')">
+                            Descripción
+                            <span class="sort-indicator" *ngIf="sortColumn === 'artdes'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                            <div class="resizer" (mousedown)="startResize($event, 3)"></div>
+                        </th>
+                        <th class="sortable resizable" (click)="toggleSort('artuni')">
+                            Estocaje
+                            <span class="sort-indicator" *ngIf="sortColumn === 'artuni'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                            <div class="resizer" (mousedown)="startResize($event, 4)"></div>
+                        </th>
+                        <th class="sortable resizable" (click)="toggleSort('artref')">
+                            Referencia universal
+                            <span class="sort-indicator" *ngIf="sortColumn === 'artref'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                            <div class="resizer" (mousedown)="startResize($event, 5)"></div>
+                        </th>
+                        <th class="sortable resizable" (click)="toggleSort('artblo')">
+                            Bloqueo
+                            <span class="sort-indicator" *ngIf="sortColumn === 'artblo'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                            <div class="resizer" (mousedown)="startResize($event, 6)"></div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let p of paginatedArticulos">
+                        <td>{{p.afacod}}</td>
+                        <td>{{p.afades}}</td>
+                        <td>{{p.afades}}</td>
+                        <td>{{p.afades}}</td>
+                        <td>{{p.afades}}</td>
+                        <td>{{p.afades}}</td>
+                        <td>{{p.afades}}</td>
+                        <td>{{p.afades}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="pagination-controls">
+                <button (click)="prevPage()" [disabled]="page === 0">Anterior</button>
+                <span>Página</span>
+                <input
+                type="number"
+                min="1"
+                [max]="totalPages"
+                [value]="page + 1"
+                (change)="goToPage($event)"
+                class="pagination-input"
+                />
+                <span>de {{ totalPages }}</span>
+                <button (click)="nextPage()" [disabled]="page + 1 >= totalPages">Siguiente</button>
+            </div>
+        </div>
+    </div>
+</div>
