@@ -272,13 +272,16 @@ export class ConsultaGeneralArticulosComponent {
     this.limpiarMessages();
     this.selectedArticulo = articulo;
     this.tempArticulo = articulo;
+    this.showProveedores();
   }
 
   closeDetails() {
     this.selectedArticulo = null;
     this.tempArticulo = [];
-    // this.activeDetailTab = null;
     this.limpiarMessages();
+    this.activeDetailTab = null;
+    this.showProveedoresGrid = false;
+    this.showExistenciasGrid = false;
   }
 
   closeDetailsSure() {if (this.isUpdate) {return;} 
@@ -330,9 +333,28 @@ export class ConsultaGeneralArticulosComponent {
   // }
 
   
-  // articuloDetailSuccess: any[] = [];
-  activeDetailTab: 'subfamilia' | null = null;
-  showSubfamiliasGrid: boolean = false;
+  // sub details functions
+  activeDetailTab: 'proveedores' | 'existencias' | null = null;
+  proveedoresError: string = '';
+  showProveedoresGrid: boolean = false;
+  isLoadingProveedores: boolean = false;
+  showProveedores() {
+    this.limpiarMessages();
+    this.showProveedoresGrid = true;
+    this.activeDetailTab = 'proveedores';
+    this.showExistenciasGrid = false;
+  }
+
+  showExistenciasGrid: boolean = false;
+  existenciasError: string = '';
+  isLoadingExtencias: boolean = false;
+  showExistencias() {
+    this.limpiarMessages();
+    this.activeDetailTab = 'existencias';
+    this.showExistenciasGrid = true;
+    this.showProveedoresGrid = false;
+  }
+
 
   //misc
   limpiarMessages() {
@@ -340,5 +362,7 @@ export class ConsultaGeneralArticulosComponent {
     this.articuloSuccess = '';
     this.articuloDetailError = '';
     this.articuloDetailSuccess = '';
+    this.proveedoresError = '';
+    this.existenciasError = '';
   }
 }

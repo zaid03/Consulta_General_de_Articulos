@@ -364,6 +364,44 @@
 	                        *ngIf="isUpdate" 
                         >Guardar</button>
                     </div>
+                    <div class="more-detail-container">
+                        <div class="tabs" role="tablist" aria-label="Detalle tabs">
+                            <button
+                                class="tab-btn"
+                                role="tab"
+                                [attr.aria-selected]="activeDetailTab === 'proveedores'"
+                                [class.active-tab]="activeDetailTab === 'proveedores'"
+                                (click)="showProveedores()"
+                            >
+                                Proveedores
+                            </button>
+                            <button
+                                class="tab-btn"
+                                role="tab"
+                                [attr.aria-selected]="activeDetailTab === 'existencias'"
+                                [class.active-tab]="activeDetailTab === 'existencias'"
+                                (click)="showExistencias()"
+                            >
+                                Existencias
+                            </button> 
+                        </div>
+                    </div>
+                    <div class="custom-grid-modal" *ngIf="showProveedoresGrid">
+                        <h1 class="errorBtn">{{proveedoresError}}</h1>
+                        <div *ngIf="isLoadingProveedores" class="loading-message">
+                            <div class="spinner"></div>
+                            <span>Cargando</span>
+                        </div>
+                        <p class="p-style">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima possimus deleniti veniam explicabo? Ab autem, nulla dolore quis numquam fugit molestiae, eius repellat veritatis harum nobis. Necessitatibus ab in nisi!</p>
+                    </div>
+                    <div class="custom-grid-modal" *ngIf="showExistenciasGrid">
+                        <h1 class="errorBtn">{{existenciasError}}</h1>
+                        <div *ngIf="isLoadingExtencias" class="loading-message">
+                            <div class="spinner"></div>
+                            <span>Cargando</span>
+                        </div>
+                        <p class="p-style">zaaaaaa Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima possimus deleniti veniam explicabo? Ab autem, nulla dolore quis numquam fugit molestiae, eius repellat veritatis harum nobis. Necessitatibus ab in nisi!</p>
+                    </div>
                 </div>
             </div>
         </div>
