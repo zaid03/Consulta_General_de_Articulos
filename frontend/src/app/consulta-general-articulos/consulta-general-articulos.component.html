@@ -120,9 +120,11 @@
                 <tbody>
                     <tr *ngFor="let p of paginatedArticulos"
                         [class.bloqueado]="p.artblo === 1"
-                        style="cursor: pointer;" (click)="showDetails(p)"
                     >
-                        <td>{{p.afacod}}</td>
+                        <td
+                            style="cursor: pointer;" 
+                            (click)="showDetails(p)"
+                        >{{p.afacod}}</td>
                         <td>{{p.asucod}}</td>
                         <td>{{p.artcod}}</td>
                         <td>{{p.artdes}}</td>
@@ -244,7 +246,7 @@
                             </div>
                             <div class="right">
                                 <textarea
-                                    [(ngModel)]="tempArticulo.artuni"
+                                    [ngModel]="calculateKEstVir(tempArticulo.artuni, tempArticulo.artsol, tempArticulo.artrec)"
                                     [disabled]="!isUpdate"
                                     (input)="allowToUpdate = true"
                                     class="textArea-style smallTextArea" 
@@ -263,7 +265,105 @@
                                 ></textarea>
                             </div>
                         </div>
+                        <div class="chunk-three">
+                            <input 
+                                class="checkbox" 
+                                type="checkbox" 
+                                [disabled]="!isUpdate"
+                                (input)="allowToUpdate = true"
+                            /> <span class="p-style">Bloqueado</span>
+                        </div>
+                        <div class="chunk-four">
+                            <p class="p-style">Referencia virtual</p>
+                            <textarea
+                                [(ngModel)]="tempArticulo.artref"
+                                [disabled]="!isUpdate"
+                                (input)="allowToUpdate = true"
+                                class="textArea-style tallText" 
+                            ></textarea>
+                            <p class="p-style">Tipo unidades</p>
+                            <textarea
+                                [(ngModel)]="tempArticulo.aun_AUNDES"
+                                [disabled]="!isUpdate"
+                                (input)="allowToUpdate = true"
+                                class="textArea-style smallTextArea" 
+                            ></textarea>
+                        </div>
+                        <div class="wrapper">
+                            <div class="chunk-five adjustedWidthSecond">
+                                <div class="left">
+                                    <p class="p-style">Pedido mínimo</p>
+                                    <p class="p-style">Precio Medio</p>
+                                    <p class="p-style">Valor existencia</p>
+                                </div>
+                                <div class="right">
+                                    <textarea
+                                        [(ngModel)]="tempArticulo.artpmi"
+                                        [disabled]="!isUpdate"
+                                        (input)="allowToUpdate = true"
+                                        class="textArea-style smallTextArea" 
+                                    ></textarea>
+                                    <textarea
+                                        [(ngModel)]="tempArticulo.artpmp"
+                                        [disabled]="!isUpdate"
+                                        (input)="allowToUpdate = true"
+                                        class="textArea-style smallTextArea" 
+                                    ></textarea>
+                                    <textarea
+                                        [ngModel]="calculateKvalExi(tempArticulo.artuni, tempArticulo.artpmp)"
+                                        [disabled]="!isUpdate"
+                                        (input)="allowToUpdate = true"
+                                        class="textArea-style smallTextArea" 
+                                    ></textarea>
+                                </div>
+                            </div>
+                            <div class="chunk-five adjustedWidthSecond">
+                                <div class="left">
+                                    <p class="p-style">Mínimo</p>
+                                    <p class="p-style">Óptimo</p>
+                                    <p class="p-style">Solicitar</p>
+                                </div>
+                                <div class="right">
+                                    <textarea
+                                        [(ngModel)]="tempArticulo.artmin"
+                                        [disabled]="!isUpdate"
+                                        (input)="allowToUpdate = true"
+                                        class="textArea-style smallTextArea" 
+                                    ></textarea>
+                                    <textarea
+                                        [(ngModel)]="tempArticulo.artopt"
+                                        [disabled]="!isUpdate"
+                                        (input)="allowToUpdate = true"
+                                        class="textArea-style smallTextArea" 
+                                    ></textarea>
+                                    <textarea
+                                        [ngModel]="calculateKUniSol(tempArticulo.artuni, tempArticulo.artsol, tempArticulo.artrec, tempArticulo.artmin, tempArticulo.artopt)"
+                                        [disabled]="!isUpdate"
+                                        (input)="allowToUpdate = true"
+                                        class="textArea-style smallTextArea" 
+                                    ></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div> 
+                    <div class="btns margin">
+                        <button 
+                            class="red-btn" 
+                            *ngIf="isUpdate" 
+                            (click)="cancelar()"
+                        >Cancelar</button>
+                        <button 
+                            class="purple-btn"
+                            [disabled]="isUpdate" 
+                            *ngIf="!isUpdate" 
+                            (click)="modificar()"
+                        >Modificar</button>
+                        <button 
+                            class="purple-btn" 
+                            [disabled]="!isUpdate" 
+	                        *ngIf="isUpdate" 
+                        >Guardar</button>
+                    </div>
                 </div>
             </div>
         </div>

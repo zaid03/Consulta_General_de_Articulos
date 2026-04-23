@@ -285,24 +285,35 @@ export class ConsultaGeneralArticulosComponent {
     else {this.closeDetails();}
   }
 
+  kestvir: number | null = null;
   calculateKEstVir(artuni: number, artsol: number, artrec: number) {
-    if (!artuni || !artsol || !artrec) {
-      
-    }
+    if (!artuni || !artsol || !artrec) {return;}
+    this.kestvir = artuni - artsol + artrec 
+    return this.kestvir;
+  }
+  calculateKvalExi(artuni: number, artpmp: number) {
+    if (!artuni || !artpmp) {return;}
+    return artuni * artpmp;
+  }
+  calculateKUniSol(artuni: number, artsol: number, artrec: number, artmin: number, artopt: number): number {
+    const kestvir = this.calculateKEstVir(artuni, artsol, artrec);
+    if (!kestvir || kestvir < artmin) {return 0;}
+    this.kestvir = artopt - kestvir;
+    return this.kestvir;
   }
 
   tempArticulo: any = {};
   isUpdate: boolean = false;
   backupData: any = [];
-  // modificar() {
-  //   this.isUpdate = true;
-  //   this.backupData = this.selectedArticulo ? { ...this.selectedArticulo } : {};
-  // }
+  modificar() {
+    this.isUpdate = true;
+    this.backupData = this.selectedArticulo ? { ...this.selectedArticulo } : {};
+  }
 
-  // cancelar() {
-  //   this.isUpdate = false;
-  //   this.tempArticulo = { ...this.backupData };
-  // }
+  cancelar() {
+    this.isUpdate = false;
+    this.tempArticulo = { ...this.backupData };
+  }
 
   // updateSuccess() {
   //   this.isUpdate = false;
