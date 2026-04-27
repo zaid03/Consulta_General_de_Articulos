@@ -2,10 +2,8 @@ package com.example.backend.controller;
 
 import com.example.backend.sqlserver2.repository.ArtRepository;
 import com.example.backend.dto.ArticleProjection;
-import com.example.backend.service.ArticleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +17,6 @@ import java.util.List;
 public class ArtController {
     @Autowired
     private ArtRepository artRepository;
-    @Autowired
-    private ArticleService articleService;
     
     private static final String SIN_RESULTADO = "Sin resultado";
     private static final String ERROR = "Error :";
@@ -54,9 +50,12 @@ public class ArtController {
         @RequestParam(defaultValue = "todos") String bloqueado
     ) {
         try {
-            Page<ArticleProjection> articles = articleService.searchArticles(
-                ent, search, afacod, asucod, bloqueado, page
+            Page<ArticleProjection> articles = artRepository.searchArticles(
+                ent, search, afacod, asucod, bloqueado, PageRequest.of(page, PAGE_SIZE)
             );
+            if (articles.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(SIN_RESULTADO);
+            }
             return ResponseEntity.ok(articles.getContent());
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getMessage());
