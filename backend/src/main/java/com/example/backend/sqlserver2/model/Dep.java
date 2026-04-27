@@ -92,7 +92,6 @@ public class Dep {
     public List<Dpe> getDpes() { return dpes; }
     public void setDpes(List<Dpe> dpes) { this.dpes = dpes; }
 
-
     public Integer getENT() { return ENT; }
     public void setENT(Integer ENT) { this.ENT = ENT; }
 
