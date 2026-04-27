@@ -306,6 +306,11 @@ export class ConsultaGeneralArticulosComponent {
     this.fetchArticulos();
   }
 
+  checkUpperFour(term: any): string {
+    if (!term) {return '';}   
+    return term.toUpperCase();
+}
+
   //detail grid functions
   selectedArticulo: any = null;
   articuloDetailError: string = '';

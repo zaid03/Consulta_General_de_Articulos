@@ -26,6 +26,8 @@
                             class="search-bar smallWidth" 
                             name="familia"
                             [(ngModel)]="afacod"
+                            (input)="afacod = checkUpperFour(afacod)"
+                            maxlength="4"
                         >
                         <span>Subfamilia</span>
                         <input 
@@ -33,6 +35,8 @@
                             name="subfamilia" 
                             class="search-bar smallWidth"
                             [(ngModel)]="asucod"
+                            (input)="asucod = checkUpperFour(asucod)"
+                            maxlength="4"
                         />
                         <div class="search-options">
                             <label>
