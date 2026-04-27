@@ -18,18 +18,21 @@
                         <input 
                             type="text"   
                             class="search-bar" 
+                            [(ngModel)]="search"
                         />
                         <span>Familia</span>
                         <input 
                             type="text" 
                             class="search-bar smallWidth" 
                             name="familia"
+                            [(ngModel)]="afacod"
                         >
                         <span>Subfamilia</span>
                         <input 
                             type="text" 
                             name="subfamilia" 
                             class="search-bar smallWidth"
+                            [(ngModel)]="asucod"
                         />
                         <div class="search-options">
                             <label>
@@ -37,26 +40,26 @@
                                     type="radio" 
                                     name="optiones" 
                                     value="todos" 
-                                     
+                                    [(ngModel)]="bloqueado"
                                 /> Todos
                                 <input 
                                     type="radio" 
                                     name="optiones" 
-                                    value="Nobloqueado" 
-                                     
+                                    value="nobloqueado" 
+                                    [(ngModel)]="bloqueado"
                                 /> No Bloqueados
                                 <input 
                                     type="radio" 
                                     name="optiones" 
                                     value="bloqueado" 
-                                      
+                                    [(ngModel)]="bloqueado"
                                 /> Bloqueados
                             </label>
                         </div>                    
                     </div>
                     <div class="btns">
-                        <button type="button" class="purple-btn" >Buscar</button>
-                        <button type="button" class="purple-btn" >Limpiar</button>
+                        <button type="button" class="purple-btn" (click)="searchArticulo()">Buscar</button>
+                        <button type="button" class="purple-btn" (click)="limpiarSearch()">Limpiar</button>
                     </div>
                 </div>
             </div>
@@ -136,7 +139,7 @@
             </table>
             <div class="pagination-controls">
                 <button (click)="prevPage()" [disabled]="page === 0">Anterior</button>
-                <span>Página {{page}}</span>
+                <span>Página {{page + 1}}</span>
                 <button (click)="nextPage()">Siguiente</button>
             </div>
             <div class="modal-backdrop" *ngIf="selectedArticulo" (click)="closeDetailsSure()"></div>

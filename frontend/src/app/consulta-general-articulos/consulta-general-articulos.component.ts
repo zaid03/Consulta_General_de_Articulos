@@ -87,14 +87,14 @@ export class ConsultaGeneralArticulosComponent {
   get paginatedArticulos(): any[] {return this.articulos || [];}
   get totalPages(): number {return Math.max(1, Math.ceil((this.articulos?.length ?? 0) / this.pageSize));}
   prevPage() {
-    if (this.page == 0) {return;}
+    if (this.page == 0) return;
     this.page = this.page - 1;
-    this.fetchArticulos();
+    this.isSearching ? this.searchArticulo() : this.fetchArticulos();
     return;
   }
   nextPage() {
     this.page = this.page + 1;
-    this.fetchArticulos();
+    this.isSearching ? this.searchArticulo() : this.fetchArticulos();
     return;
   }
 
@@ -261,6 +261,49 @@ export class ConsultaGeneralArticulosComponent {
       new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }),
       'Consulta_general_de_articulos.xlsx'
     );
+  }
+
+  search: string = '';
+  afacod: string ='';
+  asucod: string = '';
+  bloqueado: 'bloqueado' | 'nobloqueado' | 'todos' = 'nobloqueado';
+  isSearching: boolean = false;
+  searchArticulo () {
+    this.limpiarMessages();
+    this.page = 0;
+    this.isLoading = true;
+    this.isSearching = true; 
+
+    const params = new URLSearchParams();
+    params.append('page', this.page.toString());
+    if (this.search) params.append('search', this.search);
+    if (this.afacod) params.append('afacod', this.afacod);
+    if (this.asucod) params.append('asucod', this.asucod);
+    params.append('bloqueado', this.bloqueado);
+
+    this.http.get<any>(
+      `${environment.backendUrl}/api/art/search/${this.entcod}?${params.toString()}`
+    ).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        this.articulos = res;
+      },
+      error: (err) => {
+        this.articulos = [];
+        this.isLoading = false;
+        this.articuloError = err.error?.message || err.error;
+      }
+    });
+  }
+
+  limpiarSearch() {
+    this.limpiarMessages();
+    this.search = '';
+    this.afacod ='';
+    this.asucod = '';
+    this.bloqueado = 'nobloqueado';
+    this.isSearching = false; 
+    this.fetchArticulos();
   }
 
   //detail grid functions
