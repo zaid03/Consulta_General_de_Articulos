@@ -330,6 +330,8 @@ export class ConsultaGeneralArticulosComponent {
     this.activeDetailTab = null;
     this.showProveedoresGrid = false;
     this.showExistenciasGrid = false;
+    this.proveedores = [];
+    this.existencias = [];
   }
 
   closeDetailsSure() {if (this.isUpdate) {return;} 
@@ -391,6 +393,40 @@ export class ConsultaGeneralArticulosComponent {
     this.showProveedoresGrid = true;
     this.activeDetailTab = 'proveedores';
     this.showExistenciasGrid = false;
+    this.fetchProveedores();
+  }
+
+  proveedores: any = [];
+  pageProv: number = 0;
+  fetchProveedores() {
+    this.limpiarMessages();
+    this.isLoadingProveedores = true;
+    const afacod = this.selectedArticulo.afacod;
+    const asucod = this.selectedArticulo.asucod;
+    const artcod = this.selectedArticulo.artcod;
+
+    this.http.get(`${environment.backendUrl}/api/more/proveedores-por-articulo/${this.entcod}/${afacod}/${asucod}/${artcod}`).subscribe({
+      next: (res) => {
+        this.isLoadingProveedores = false;
+        this.proveedores = res;
+        this.pageProv = 0;
+      },
+      error: (err) => {
+        this.pageProv = 0;
+        this.proveedores = [];
+        this.isLoadingProveedores = false;
+        this.proveedoresError = err.error?.error || err.error;
+      }
+    })
+  }
+  get paginatedProveedores(): any[] {if (!this.proveedores || this.proveedores.length === 0) return [];
+    const start = this.pageProv * this.pageSize; return this.proveedores.slice(start, start + this.pageSize);
+  }
+  get totalPagesProveedores(): number {return Math.max(1, Math.ceil((this.proveedores?.length ?? 0) / this.pageSize));}
+  prevPageProv(): void {if (this.pageProv > 0) this.pageProv--;}
+  nextPageProv(): void {if (this.pageProv < this.totalPagesProveedores - 1) this.pageProv++;}
+  goToPageProv(event: any): void {const inputPage = Number(event.target.value);
+    if (inputPage >= 1 && inputPage <= this.totalPages) {this.pageProv = inputPage - 1;}
   }
 
   showExistenciasGrid: boolean = false;
@@ -401,8 +437,41 @@ export class ConsultaGeneralArticulosComponent {
     this.activeDetailTab = 'existencias';
     this.showExistenciasGrid = true;
     this.showProveedoresGrid = false;
+    this.fetchEcistencias(); 
   }
 
+  existencias: any = [];
+  pageExistencia: number = 0;
+  fetchEcistencias() {
+    this.limpiarMessages();
+    this.isLoadingExtencias = true;
+    const afacod = this.selectedArticulo.afacod;
+    const asucod = this.selectedArticulo.asucod;
+    const artcod = this.selectedArticulo.artcod;
+
+    this.http.get(`${environment.backendUrl}/api/mea/existencias-por-articulo/${this.entcod}/${afacod}/${asucod}/${artcod}`).subscribe({
+      next: (res) => {
+        this.isLoadingExtencias = false;
+        this.existencias = res;
+        this.pageExistencia = 0;
+      },
+      error: (err) => {
+        this.pageExistencia = 0;
+        this.existencias = [];
+        this.isLoadingExtencias = false;
+        this.existenciasError = err.error?.error || err.error;
+      }
+    })
+  }
+  get paginatedExistencias(): any[] {if (!this.existencias || this.existencias.length === 0) return [];
+    const start = this.pageExistencia * this.pageSize; return this.existencias.slice(start, start + this.pageSize);
+  }
+  get totalPagesExistencias(): number {return Math.max(1, Math.ceil((this.existencias?.length ?? 0) / this.pageSize));}
+  prevPageExistencias(): void {if (this.pageExistencia > 0) this.pageExistencia--;}
+  nextPageExistencias(): void {if (this.pageExistencia < this.totalPagesExistencias - 1) this.pageExistencia++;}
+  goToPageExistencias(event: any): void {const inputPage = Number(event.target.value);
+    if (inputPage >= 1 && inputPage <= this.totalPages) {this.pageExistencia = inputPage - 1;}
+  }
 
   //misc
   limpiarMessages() {

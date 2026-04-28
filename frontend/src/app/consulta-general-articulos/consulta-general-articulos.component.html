@@ -399,7 +399,41 @@
                             <div class="spinner"></div>
                             <span>Cargando</span>
                         </div>
-                        <p class="p-style">Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima possimus deleniti veniam explicabo? Ab autem, nulla dolore quis numquam fugit molestiae, eius repellat veritatis harum nobis. Necessitatibus ab in nisi!</p>
+                        <table class="main-table">
+                            <thead>
+                                <tr>
+                                    <th>Cod.Prov</th>
+                                    <th>Proveedor</th>
+                                    <th>Referencia Prov.</th>
+                                    <th>Unid.Embalaje</th>
+                                    <th>Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let p of paginatedProveedores">
+                                    <td>{{p.tercod}}</td>
+                                    <td>{{p.ter_TERNOM}}</td>
+                                    <td>{{p.apref}}</td>
+                                    <td>{{p.apruem}}</td>
+                                    <td>{{p.aprobs}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination-controls">
+                            <button (click)="prevPageProv()" [disabled]="pageProv === 0">Anterior</button>
+                            <span>Página</span>
+                            <input
+                                type="number"
+                                min="1"
+                                [max]="totalPagesProveedores"
+                                [value]="pageProv + 1"
+                                (change)="goToPageProv($event)"
+                                class="pagination-input"
+                                class="pagination-input"
+                            />
+                            <span>de {{ totalPagesProveedores }}</span>
+                            <button (click)="nextPageProv(  )" [disabled]="pageProv + 1 >= totalPagesProveedores">Siguiente</button>
+                        </div>
                     </div>
                     <div class="custom-grid-modal" *ngIf="showExistenciasGrid">
                         <h1 class="errorBtn">{{existenciasError}}</h1>
@@ -407,7 +441,41 @@
                             <div class="spinner"></div>
                             <span>Cargando</span>
                         </div>
-                        <p class="p-style">zaaaaaa Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima possimus deleniti veniam explicabo? Ab autem, nulla dolore quis numquam fugit molestiae, eius repellat veritatis harum nobis. Necessitatibus ab in nisi!</p>
+                        <table class="main-table">
+                            <thead>
+                                <tr>
+                                    <th>Cod.Almacén</th>
+                                    <th>Servicio</th>
+                                    <th>Nombre servicio</th>
+                                    <th>Unidades</th>
+                                    <th>Localización</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let e of paginatedExistencias">
+                                    <td>{{e.magcod}}</td>
+                                    <td>{{e.depcod}}</td>
+                                    <td>{{e.depdes}}</td>
+                                    <td>{{e.meauni}}</td>
+                                    <td>{{e.mealoc}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination-controls">
+                            <button (click)="prevPageExistencias()" [disabled]="pageExistencia === 0">Anterior</button>
+                            <span>Página</span>
+                            <input
+                                type="number"
+                                min="1"
+                                [max]="totalPagesExistencias"
+                                [value]="pageExistencia + 1"
+                                (change)="goToPageExistencias($event)"
+                                class="pagination-input"
+                                class="pagination-input"
+                            />
+                            <span>de {{ totalPagesExistencias }}</span>
+                            <button (click)="nextPageExistencias()" [disabled]="pageExistencia + 1 >= totalPagesExistencias">Siguiente</button>
+                        </div>
                     </div>
                 </div>
             </div>
