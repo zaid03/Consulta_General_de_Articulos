@@ -198,7 +198,7 @@ export class ConsultaGeneralArticulosComponent {
     const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(14);
-    doc.text('Consulta analîtica de familias', 40, 40);
+    doc.text('Consulta general de artículos', 40, 40);
 
     autoTable(doc, {
       startY: 60,
@@ -309,7 +309,7 @@ export class ConsultaGeneralArticulosComponent {
   checkUpperFour(term: any): string {
     if (!term) {return '';}   
     return term.toUpperCase();
-}
+  }
 
   //detail grid functions
   selectedArticulo: any = null;
