@@ -62,6 +62,7 @@ export class ConsultaGeneralArticulosComponent {
     }
 
     this.fetchArticulos();
+    this.getPagination();
   }
 
   fetchArticulos() {
@@ -78,6 +79,18 @@ export class ConsultaGeneralArticulosComponent {
       error: (err) => {
         this.articuloError = err.error.error || err.error;
         this.isLoading = false;
+      }
+    })
+  }
+
+  pagination: number = 0;
+  getPagination() {
+    this.http.get<any>(`${environment.backendUrl}/api/art/get-pag/${this.entcod}`).subscribe({
+      next: (res) => {
+        this.pagination = this.Math.ceil(res) / 20;
+      },
+      error: (err) => {
+        console.warn(err.error.error || err.error);
       }
     })
   }

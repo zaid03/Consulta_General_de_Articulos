@@ -19,6 +19,9 @@ public interface ArtRepository extends JpaRepository<Art, ArtId>, JpaSpecificati
     //main fetch for consulta general de articulos
     List<ArticleProjection> findByENT(Integer ent, Pageable pageable);
 
+    //getting pagination number
+    Integer countByENT(Integer ent);
+    
     //search in consulta general de articulos with all criteria
     @Query(value = "SELECT " +
         "R.AFACOD, " +
