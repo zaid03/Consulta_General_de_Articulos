@@ -10,5 +10,6 @@ import com.example.backend.sqlserver2.model.AunId;
 
 @Repository
 public interface AunRepository extends JpaRepository<Aun, AunId> {
-
+    //needed for select lists in mantinimiento general de articulos
+    List<Aun> findByENT(Integer ent);
 }
