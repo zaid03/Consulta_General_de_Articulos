@@ -334,6 +334,7 @@ export class ConsultaGeneralArticulosComponent {
     this.selectedArticulo = articulo;
     this.tempArticulo = articulo;
     this.showProveedores();
+    this.fetchTipos();
   }
 
   closeDetails() {
@@ -345,6 +346,7 @@ export class ConsultaGeneralArticulosComponent {
     this.showExistenciasGrid = false;
     this.proveedores = [];
     this.existencias = [];
+    this.clearTipos();
   }
 
   closeDetailsSure() {if (this.isUpdate) {return;} 
@@ -381,21 +383,117 @@ export class ConsultaGeneralArticulosComponent {
     this.tempArticulo = { ...this.backupData };
   }
 
-  // updateSuccess() {
-  //   this.isUpdate = false;
-  //   this.allowToUpdate = false;
-  // }
+  updateSuccess() {
+    this.isUpdate = false;
+    this.allowToUpdate = false;
+  }
 
   allowToUpdate: boolean = false;
-  // isUpdateAllowed(afacod: string, afades: string) {
-  //   if (this.allowToUpdate) {
-  //     // this.updateFamilia(afacod, afades);
-  //   } else {
-  //     return;
-  //   }
-  // }
+  isUpdateAllowed() {
+    if (this.allowToUpdate) {
+      this.updateArticulo();
+    } else {
+      return;
+    }
+  }
 
+  updateArticulo() {
+    this.limpiarMessages();
+    Object.assign(this.selectedArticulo, this.tempArticulo);
+
+    const payload = {
+      "ARTDES": this.selectedArticulo.artdes, 
+      "ARTREF": this.selectedArticulo.artref, 
+      "ARTBLO": this.selectedArticulo.artblo, 
+      "AUNCOD": this.auncodMod,
+      "ARTUCO": this.selectedArticulo.artuco,
+      "ARTUEM": this.selectedArticulo.artuem,
+      "ARTMIN": this.selectedArticulo.artmin,
+      "ARTOPT": this.selectedArticulo.artopt
+    }
+    if (!payload) {return;}
+
+    const afacod = this.selectedArticulo.afacod;
+    const subfamilia = this.selectedArticulo.asucod;
+    const articulo = this.selectedArticulo.artcod;
+    this.isUpdating = true;
+
+    this.http.patch<any>(`${environment.backendUrl}/api/art/update-art/${this.entcod}/${afacod}/${subfamilia}/${articulo}`, payload).subscribe({
+      next: (res) => {
+        this.isUpdating = false;
+        this.updateSuccess();
+        this.fetchArticulos();
+        this.articuloDetailSuccess = 'Artículo actualizado correctamente';
+      },
+      error: (err) => {
+        this.articuloDetailError = err.error.error ?? err.error;
+        this.isUpdating = false;
+      }
+    })
+  }
+
+  tipos: any = null;
+  auncodMod: string = '';
+  fetchTipos() {
+    this.http.get(`${environment.backendUrl}/api/aun/get-all/${this.entcod}`).subscribe({
+      next: (res) => {
+        this.tipos = res;
+        if (this.tempArticulo && Array.isArray(this.tipos)) {
+          const found = this.tipos.find((t: any) => t.aundes === this.tempArticulo.aun_AUNDES);
+          this.auncodMod = found ? found.auncod : '';
+        }
+      },
+      error: (err) => {
+        console.warn(err.error.error ?? err.error);
+      }
+    })
+  }
+
+  clearTipos() {
+    this.tipos = null;
+    this.auncodMod = '';
+  }
   
+  showDeleteConfirm: boolean = false;
+  openDeleteConfirm() {
+    this.showDeleteConfirm = true;
+  }
+
+  closeDeleteGrid() {
+    this.showDeleteConfirm = false;
+  }
+
+  confirmDelete(): void {
+    if (this.selectedArticulo) {
+      this.deleteArticulo();
+    }
+  }
+
+  isDeleting: boolean = false;
+  delErr: string = '';
+  deleteArticulo() {
+    this.limpiarMessages();
+    this.isDeleting = true;
+
+    const afacod = this.selectedArticulo.afacod;
+    const subfamilia = this.selectedArticulo.asucod;
+    const articulo = this.selectedArticulo.artcod;
+
+    this.http.delete(`${environment.backendUrl}/api/art/delete-art/${this.entcod}/${afacod}/${subfamilia}/${articulo}`).subscribe({
+      next: (res) => {
+        this.isDeleting = false;
+        this.articuloDetailSuccess = 'Artículo eliminado correctamente';
+        this.fetchArticulos();
+        this.closeDeleteGrid();
+        this.closeDetails();
+      },
+      error: (err) => {
+        this.isDeleting = false;
+        this.delErr = err.error.error ?? err.error
+      }
+    })
+  }
+
   // sub details functions
   activeDetailTab: 'proveedores' | 'existencias' | null = null;
   proveedoresError: string = '';
@@ -494,5 +592,6 @@ export class ConsultaGeneralArticulosComponent {
     this.articuloDetailSuccess = '';
     this.proveedoresError = '';
     this.existenciasError = '';
+    this.delErr = '';
   }
 }
