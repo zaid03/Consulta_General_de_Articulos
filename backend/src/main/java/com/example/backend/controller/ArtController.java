@@ -1,9 +1,11 @@
 package com.example.backend.controller;
 
 import com.example.backend.sqlserver2.model.ArtId;
+import com.example.backend.sqlserver2.model.Mea;
 import com.example.backend.sqlserver2.model.Art;
 import com.example.backend.sqlserver2.repository.ArtRepository;
 import com.example.backend.sqlserver2.repository.AsuRepository;
+import com.example.backend.sqlserver2.repository.MeaRepository;
 import com.example.backend.dto.ArticleProjection;
 import com.example.backend.dto.magcodOnly;
 
@@ -25,6 +27,8 @@ public class ArtController {
     private ArtRepository artRepository;
     @Autowired
     private AsuRepository asuRepository;
+    @Autowired
+    private MeaRepository meaRepository;
     
     private static final String SIN_RESULTADO = "Sin resultado";
     private static final String ERROR = "Error :";
@@ -154,7 +158,7 @@ public class ArtController {
     }
 
     //adding an articulo
-    public record addArt (Integer ENT, String AFACOD, String ASUCOD, String ARTCOD, String ARTDES, String ARTREF, Integer ARTBLO, Double ARTUNI,Double ARTSOL, Double ARTREC, String AUNCOD, Double ARTUCO, Double ARTUEM, Double ARTPMP, Double ARTMIN, Double ARTOPT) {}
+    public record addArt (Integer ENT, String AFACOD, String ASUCOD, String ARTCOD, String ARTDES, String ARTREF, Integer ARTBLO, Double ARTUNI, Double ARTSOL, Double ARTREC, String AUNCOD, Double ARTUCO, Double ARTUEM, Double ARTPMP, Double ARTMIN, Double ARTOPT) {}
     @PostMapping("/add-art")
     public ResponseEntity<?> artAdd (
         @RequestBody addArt payload
@@ -190,7 +194,28 @@ public class ArtController {
             articulo.setARTOPT(payload.ARTOPT());
             artRepository.save(articulo);
 
-            List<magcodOnly> magcods = asuRepository.
+            List<magcodOnly> magcods = asuRepository.findAllByENTAndAFACODAndASUCOD(payload.ENT(), payload.AFACOD, payload.ASUCOD);
+
+            if (!magcods.isEmpty()) {
+                for (magcodOnly magcod: magcods) {
+                    Mea meaAdd = new Mea();
+                    meaAdd.setENT(payload.ENT());
+                    meaAdd.setMAGCOD(magcod.getMat_MAGCOD());
+                    meaAdd.setAFACOD(payload.AFACOD());
+                    meaAdd.setASUCOD(payload.ASUCOD());
+                    meaAdd.setARTCOD(payload.ARTCOD());
+                    meaAdd.setMEAUNI(payload.ARTUNI());
+                    meaAdd.setMEAMIN(payload.ARTMIN());
+                    meaAdd.setMEASOL(payload.ARTSOL());
+                    meaAdd.setMEAOPT(payload.ARTOPT());
+                    meaAdd.setMEAPMP(payload.ARTPMP());
+                    meaAdd.setMEAPMI(0.00);
+                    meaAdd.setMEAREC(payload.ARTREC());
+                    meaAdd.setMEAIND(0);
+                    meaRepository.save(meaAdd);
+                }
+            }
+
             return ResponseEntity.noContent().build();
         } catch (DataAccessException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR + ex.getMostSpecificCause().getMessage());
