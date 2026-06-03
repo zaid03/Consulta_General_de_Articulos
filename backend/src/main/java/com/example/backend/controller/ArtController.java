@@ -3,9 +3,12 @@ package com.example.backend.controller;
 import com.example.backend.sqlserver2.model.ArtId;
 import com.example.backend.sqlserver2.model.Art;
 import com.example.backend.sqlserver2.repository.ArtRepository;
+import com.example.backend.sqlserver2.repository.AsuRepository;
 import com.example.backend.dto.ArticleProjection;
+import com.example.backend.dto.magcodOnly;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,8 @@ import java.util.Optional;
 public class ArtController {
     @Autowired
     private ArtRepository artRepository;
+    @Autowired
+    private AsuRepository asuRepository;
     
     private static final String SIN_RESULTADO = "Sin resultado";
     private static final String ERROR = "Error :";
@@ -145,6 +150,50 @@ public class ArtController {
             return ResponseEntity.noContent().build();
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + ex.getMessage());
+        }
+    }
+
+    //adding an articulo
+    public record addArt (Integer ENT, String AFACOD, String ASUCOD, String ARTCOD, String ARTDES, String ARTREF, Integer ARTBLO, Double ARTUNI,Double ARTSOL, Double ARTREC, String AUNCOD, Double ARTUCO, Double ARTUEM, Double ARTPMP, Double ARTMIN, Double ARTOPT) {}
+    @PostMapping("/add-art")
+    public ResponseEntity<?> artAdd (
+        @RequestBody addArt payload
+    ) {
+        try {
+            if (payload == null || payload.ENT() == null || payload.AFACOD() == null || payload.ASUCOD() == null || payload.ARTCOD() == null || payload.ARTDES() == null) {
+                return ResponseEntity.badRequest().body("Faltan datos obligatorios.");
+            }
+
+            ArtId id = new ArtId(payload.ENT(), payload.AFACOD(), payload.ASUCOD(), payload.ARTCOD());
+            Optional<Art> articuloCheck = artRepository.findById(id);
+
+            if (!articuloCheck.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("El artículo ya existe.");
+            }
+
+            Art articulo = new Art();
+            articulo.setENT(payload.ENT());
+            articulo.setAFACOD(payload.AFACOD());
+            articulo.setASUCOD(payload.ASUCOD());
+            articulo.setARTCOD(payload.ARTCOD());
+            articulo.setARTDES(payload.ARTDES());
+            articulo.setARTREF(payload.ARTREF());
+            articulo.setARTBLO(payload.ARTBLO());
+            articulo.setARTUNI(payload.ARTUNI());
+            articulo.setARTSOL(payload.ARTSOL());
+            articulo.setARTREC(payload.ARTREC());
+            articulo.setAUNCOD(payload.AUNCOD());
+            articulo.setARTUCO(payload.ARTUCO());
+            articulo.setARTUEM(payload.ARTUEM());
+            articulo.setARTPMP(payload.ARTPMP());
+            articulo.setARTMIN(payload.ARTMIN());
+            articulo.setARTOPT(payload.ARTOPT());
+            artRepository.save(articulo);
+
+            List<magcodOnly> magcods = asuRepository.
+            return ResponseEntity.noContent().build();
+        } catch (DataAccessException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ERROR + ex.getMostSpecificCause().getMessage());
         }
     }
 }

@@ -677,7 +677,7 @@ export class ConsultaGeneralArticulosComponent {
       "ARTDES": this.descriptionAdd,
       "ARTREF": this.refUni,
       "ARTBLO": this.bloqAdd,
-      "bloqAdd": this.existenciasAdd,
+      "ARTUNI": this.existenciasAdd,
       "ARTSOL": this.pteServir,
       "ARTREC": this.pteEntrada,
       "AUNCOD": this.auncodMod,
@@ -688,7 +688,7 @@ export class ConsultaGeneralArticulosComponent {
       "ARTOPT": this.estoOptimo 
     }
     
-    
+
   }
 
   //misc
