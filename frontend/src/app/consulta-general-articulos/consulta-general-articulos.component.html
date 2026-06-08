@@ -761,7 +761,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let p of paginatedProveedoresAdd" [class.grey-row]="p.terblo == 1">
-                    <td style="cursor: pointer;" (click)="selectProveedor(p)">{{ p.tercod }}</td>
+                    <td style="cursor: pointer;" (click)="selectProveedor(p.tercod)">{{ p.tercod }}</td>
                     <td>{{ p.ternom }}</td>
                     <td>{{ p.ternif }}</td>
                     <td>{{ p.terali }}</td>

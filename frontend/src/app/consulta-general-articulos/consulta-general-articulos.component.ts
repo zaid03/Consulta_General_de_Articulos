@@ -615,6 +615,7 @@ export class ConsultaGeneralArticulosComponent {
     this.proveedores = null;
     this.searchTerm = '';
     this.filterOption = 'noBloqueados';
+    this.proveedoresToAdd = null;
   }
 
   proveedoresAdd: any = [];
@@ -645,18 +646,10 @@ export class ConsultaGeneralArticulosComponent {
     const start = this.pagePro * this.pageSizePro;
     return this.proveedoresAdd.slice(start, start + this.pageSizePro);
   }
-  nextPagePro() {
-    if (this.pagePro < this.totalPagesPro - 1) {this.pagePro++;}
-  }
-  prevPagePro() {
-    if (this.pagePro > 0) {this.pagePro--;}
-  }
-  goToPagePro(event: any) {
-    const inputPage = Number(event.target.value);
-    if (inputPage >= 1 && inputPage <= this.totalPagesPro) {this.pagePro = inputPage - 1;}
-  }
-  private updatePaginationPro(): void {
-    const total = this.totalPagesPro;
+  nextPagePro() {if (this.pagePro < this.totalPagesPro - 1) {this.pagePro++;}}
+  prevPagePro() {if (this.pagePro > 0) {this.pagePro--;}}
+  goToPagePro(event: any) {const inputPage = Number(event.target.value); if (inputPage >= 1 && inputPage <= this.totalPagesPro) {this.pagePro = inputPage - 1;}}
+  private updatePaginationPro(): void {const total = this.totalPagesPro;
     if (total === 0) {this.pagePro = 0; return;}
     if (this.pagePro >= total) {this.pagePro = total - 1;}
   }
@@ -693,10 +686,15 @@ export class ConsultaGeneralArticulosComponent {
     this.searchTerm = '';
   }
 
-  proveedorTercod: number | null = null
-  selectProveedor(codigo: any) {
-    this.proveedorTercod = codigo.tercod;
-    this.closeProveedores();
+  proveedoresToAdd: any = [];
+  selectProveedor(tercod: any) {
+    if (this.proveedoresToAdd.includes(tercod)) {
+      this.proveedoresToAdd = this.proveedoresToAdd.filter((item: any) => item !== tercod);
+    } else {
+      this.proveedoresToAdd = [...this.proveedoresToAdd, tercod];
+    }
+
+    console.log(this.proveedoresToAdd);
   }
 
   showExistenciasGrid: boolean = false;
