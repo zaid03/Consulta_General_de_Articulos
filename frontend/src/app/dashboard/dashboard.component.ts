@@ -36,7 +36,6 @@ export class DashboardComponent implements OnInit {
   contabilidad = false;
   articulos = false;
   temp = false;
-  temp2 = false;
   constructor(private http: HttpClient, private router: Router) {}
 
   //main functions
@@ -182,6 +181,15 @@ export class DashboardComponent implements OnInit {
         break;
       case 'CGArticulos':
         this.router.navigate(['/CGArticulos']);
+        break;
+      case 'CAlmacen':
+        this.router.navigate(['/CAlmacen']);
+        break;
+      case 'MGArticulos':
+        this.router.navigate(['/MGArticulos']);
+        break;
+      case 'MAlmacen':
+        this.router.navigate(['/MAlmacen']);
         break;
       default:
         break;
