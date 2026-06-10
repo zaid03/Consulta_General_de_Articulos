@@ -77,7 +77,6 @@
                 <div class="menu-panel" *ngIf="showMenu">
                     <button class="purple-btn" (click)="DownloadPDF()">Exportar a PDF</button>
                     <button class="purple-btn" (click)="downloadExcel()">Exportar a EXCEL</button>
-                    <button class="purple-btn" (click)="openAdd()">Añadir artículo</button>
                 </div>
             </div>
         </div>
@@ -255,13 +254,11 @@
                                 <textarea
                                     [(ngModel)]="tempArticulo.artuco"
                                     [disabled]="!isUpdate"
-                                    (input)="allowToUpdate = true"
                                     class="textArea-style smallTextArea" 
                                 ></textarea>
                                 <textarea
                                     [(ngModel)]="tempArticulo.artuem"
                                     [disabled]="!isUpdate"
-                                    (input)="allowToUpdate = true"
                                     class="textArea-style smallTextArea" 
                                 ></textarea>
                             </div>
@@ -272,7 +269,7 @@
                                 type="checkbox" 
                                 [disabled]="!isUpdate"
                                 [checked]="tempArticulo.artblo === 1"
-                                (change)="tempArticulo.artblo = (tempArticulo.artblo === 1 ? 0 : 1); allowToUpdate = true"
+                                (change)="tempArticulo.artblo = (tempArticulo.artblo === 1 ? 0 : 1)"
                             /> <span class="p-style">Bloqueado</span>
                         </div>
                         <div class="chunk-four adjustdSpecial">
@@ -284,13 +281,11 @@
                                 <textarea
                                     [(ngModel)]="tempArticulo.artpmi"
                                     [disabled]="!isUpdate"
-                                    (input)="allowToUpdate = true"
                                     class="textArea-style smallTextArea" 
                                 ></textarea>
                                 <textarea
                                     [(ngModel)]="tempArticulo.artmin"
                                     [disabled]="!isUpdate"
-                                    (input)="allowToUpdate = true"
                                     class="textArea-style smallTextArea" 
                                 ></textarea>
                             </div>
@@ -322,7 +317,6 @@
                                 <textarea
                                     [(ngModel)]="tempArticulo.artopt"
                                     [disabled]="!isUpdate"
-                                    (input)="allowToUpdate = true"
                                     class="textArea-style smallTextArea" 
                                 ></textarea>
                                 <textarea
@@ -341,14 +335,12 @@
                                 <textarea
                                     [(ngModel)]="tempArticulo.artref"
                                     [disabled]="!isUpdate"
-                                    (input)="allowToUpdate = true"
                                     class="textArea-style tallText" 
                                 ></textarea>
                                 <select 
                                     class="select-style selectSpecial tallText"
                                     [disabled]="!isUpdate"
                                     [(ngModel)]="auncodMod"
-                                    (change)="allowToUpdate = true"
                                 >
                                     <option *ngFor="let t of tipos" [value]="t.auncod">
                                         {{t.aundes}}
@@ -356,37 +348,6 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="btns margin">
-                        <button 
-                            class="purple-btn" 
-                            [disabled]="isUpdate"
-                            [ngClass]="{ 'disabled-btn': isUpdate }" 
-                            (click)="openProveedores()"
-                        >Añadir proveedores</button>
-                        <button 
-                            class="red-btn" 
-                            *ngIf="isUpdate" 
-                            (click)="cancelar()"
-                        >Cancelar</button>
-                        <button 
-                            class="purple-btn"
-                            [disabled]="isUpdate" 
-                            *ngIf="!isUpdate" 
-                            (click)="modificar()"
-                        >Modificar</button>
-                        <button 
-                            class="purple-btn" 
-                            [disabled]="!isUpdate" 
-	                        *ngIf="isUpdate" 
-                            (click)="isUpdateAllowed()"
-                        >Guardar</button>
-                        <button 
-                            class="red-btn" 
-                            [disabled]="isUpdate" 
-                            [ngClass]="{ 'disabled-btn': isUpdate }" 
-                            (click)="openDeleteConfirm()"
-                        >Borrar</button>
                     </div>
                     <div class="more-detail-container">
                         <div class="tabs" role="tablist" aria-label="Detalle tabs">
@@ -424,7 +385,6 @@
                                     <th>Referencia Prov.</th>
                                     <th>Unid.Embalaje</th>
                                     <th>Observaciones</th>
-                                    <th>Accíon</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -451,16 +411,6 @@
                                             class="textArea-style tallTextDetail"  
                                             #descUpdate  
                                         ></textarea>
-                                    </td>
-                                    <td class="gap">
-                                        <button
-                                            (click)="updateProveedor(p.tercod, refernciaUpdate.value, numberUpdate.value, descUpdate.value)"
-                                            class="purple-btn margin-btn" 
-                                        > ✔ </button>
-                                        <button 
-                                            class="red-btn"
-                                            (click)="showdeleteProv(p.tercod)"
-                                        >-</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -525,275 +475,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal-backdrop" *ngIf="showDeleteConfirm" (click)="closeDeleteGrid()"></div>
-<div class="delete-confirm-modal" *ngIf="showDeleteConfirm">
-    <h3>¿Seguro que quieres eliminar este Artículo?</h3>
-    <h1 class="errorBtn">{{delErr}}</h1>
-    <div *ngIf="isDeleting" class="loading-message">
-        <div class="spinner"></div>
-        <span>borrando</span>
-    </div>
-    <button class="red-btn margin-btn" (click)="confirmDelete()">-</button>
-    <button class="purple-btn" (click)="closeDeleteGrid()">✖</button>
-</div>
-
-<div class="modal-backdrop" *ngIf="showAddGrid" (click)="closeAdd()"></div>
-<div class="add-confirm-modal addArt" *ngIf="showAddGrid">
-    <div class="btns">
-        <div class="title">
-            <h3>Añadir una Artículo</h3>  
-        </div>
-        <button class="purple-btn" (click)="addArticulos()">+</button>
-        <button class="red-btn" (click)="closeAdd()">✖</button>
-    </div>
-    <h1 class="errorBtn">{{addArticuloError}}</h1>
-    <div *ngIf="isAdding" class="loading-message">
-        <div class="spinner"></div>
-        <span>añadiendo</span>
-    </div>
-    <div class="add-content">
-        <div class="left-row">
-            <div class="left-left-row specialGapSecond">
-                <p class="p-style">Familia*</p>
-                <p class="p-style">Descripción*</p>
-                <p class="p-style">Existencias</p>
-                <p class="p-style">Estocaje virtual</p>
-                <p class="p-style">Unidades en embalaje</p>
-                <p class="p-style">Estocaje mínimo</p>
-            </div>
-            <div class="right-left-row">
-                <select 
-                    class="select-style selectAdd"
-                    [(ngModel)]="familiaAdd"
-                    (ngModelChange)="fetchSubFamilias($event)"
-                >
-                    <option *ngFor="let t of familias" [value]="t.afacod">
-                        {{t.afades}}
-                    </option>
-                </select>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="descriptionAdd"
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="existenciasAdd"
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [value]="calculateKEstVir(existenciasAdd, pteServir, pteEntrada)"
-                    disabled
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="uniEmbalaje"
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="estoMinimo"
-                >
-                </textarea>
-            </div>
-        </div>
-        <div class="center-row">
-            <div class="left-center-row specialGap">
-                <p class="p-style">Subfamilia*</p>
-                <p class="p-style">Referencia universal</p>
-                <p class="p-style">Pte. Servir</p>
-                <p class="p-style">Tipo Unidades</p>
-                <p class="p-style">Precio medio ponderado</p>
-                <p class="p-style">Estocaje óptimo</p>
-            </div>
-            <div class="right-center-row">
-                <select 
-                    class="select-style selectAdd"
-                    [(ngModel)]="subfamiliasAdd"
-                >
-                    <option *ngFor="let t of subfamilias" [value]="t.asucod">
-                        {{t.asudes}}
-                    </option>
-                </select>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="refUni"
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="pteServir"
-                >
-                </textarea>
-                <select 
-                    class="select-style selectAdd"
-                    [(ngModel)]="auncodMod"
-                >
-                    <option *ngFor="let t of tipos" [value]="t.auncod">
-                        {{t.aundes}}
-                    </option>
-                </select>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="preMePon"
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="estoOptimo"
-                >
-                </textarea>
-            </div>
-        </div>
-        <div class="right-row">
-            <div class="left-right-row">
-                <p class="p-style">Código*</p>
-                <p class="p-style">Bloqueado</p>
-                <p class="p-style">Pte. Entrada</p>
-                <p class="p-style">Unidades de consumo</p>
-                <p class="p-style">Valor existencias</p>
-                <p class="p-style">Solicitar</p>
-            </div>
-            <div class="right-right-row">
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="codigoAdd"
-                    (ngModelChange)="codigoAdd = $event.toUpperCase()"
-                >
-                </textarea>
-                <input 
-                    type="checkbox" 
-                    class="checkbox" 
-                    [(ngModel)]="bloqAdd"
-                    (change)="bloqAdd = (bloqAdd === 1 ? 0 : 1);"
-                /> 
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="pteEntrada"
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [(ngModel)]="uniDeCon"
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [value]="calculateKvalExi(existenciasAdd, preMePon)"
-                    disabled
-                >
-                </textarea>
-                <textarea
-                    class="textArea-style textAdd"
-                    [value]="calculateKUniSol(existenciasAdd, pteServir, pteEntrada, estoMinimo, estoOptimo)"
-                    disabled
-                >
-                </textarea>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal-backdrop" *ngIf="deleteProveedorGrid"></div>
-<div class="delete-confirm-modal" *ngIf="deleteProveedorGrid">
-    <h3>¿Seguro que quieres eliminar este proveedor?</h3>
-    <h1 class="errorBtn">{{delErrProv}}</h1>
-    <div *ngIf="isDeleting" class="loading-message">
-        <div class="spinner"></div>
-        <span>borrando</span>
-    </div>
-    <button class="red-btn margin-btn" (click)="deleteProveedor()">-</button>
-    <button class="purple-btn" (click)="closeDeleteProv()">✖</button>
-</div>
-
-<div class="modal-backdrop" *ngIf="showProveedorGrid"></div>
-<div class="proveedor-grid-modal" *ngIf="showProveedorGrid">
-    <div class="btns btnsGrid">
-        <div class="title">
-            <p class="p-style sizeTitle">Seleccione un proveedor</p>
-        </div>
-        <div class="info">
-            <p class="p-style" *ngIf="provsNumber > 0">Se seleccionan {{provsNumber}} proveedores</p>
-            <button class="purple-btn size" (click)="addProveedorToArticulo()">+</button>
-            <button class="red-btn" (click)="closeProveedores()">✖</button>
-        </div>
-    </div>
-    <div class="search-holder provs-add-search">
-        <div class="search-container">
-            <form class="search-form provs-add">
-                <input type="text" class="search-bar" placeholder="Buscar proveedor" name="search" [(ngModel)]="searchTerm"/>
-                <div class="search-options">
-                    <label>
-                        <input type="radio" name="optiones" value="todos" [(ngModel)]="filterOption" /> Todos
-                        <input type="radio" name="optiones" value="Nobloqueado" [(ngModel)]="filterOption" /> No Bloqueados
-                        <input type="radio" name="optiones" value="bloqueado" [(ngModel)]="filterOption"  /> Bloqueados
-                    </label>
-                </div>
-                <div class="search-btns provs-add-btns">
-                    <button type="button" class="purple-btn" (click)="searchProveedor()">Buscar</button>
-                    <button type="button" class="purple-btn" (click)="clearSearch()">Limpiar</button>
-                </div>
-            </form>
-        </div> 
-    </div>
-    <h1 class="errorBtn">{{error}}</h1>
-    <div *ngIf="isLoadingPro" class="loading-message">
-        <div class="spinner"></div>
-        <span>Cargando</span>
-    </div>
-    <div class="main-list">
-        <table  class="provs-table main-table">
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Nombre</th>
-                    <th>NIF</th>
-                    <th>Alias</th>
-                    <th>Teléfono</th>
-                    <th>Domicilio</th>
-                    <th>Código Postal</th>
-                    <th>Municipio</th>
-                    <th>Correo electrónico</th>
-                    <th>Observaciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let p of paginatedProveedoresAdd" [class.grey-row]="p.terblo == 1" [class.selected-row]="isSelected(p.tercod)">
-                    <td style="cursor: pointer;" (click)="selectProveedor(p.tercod)">{{ p.tercod }}</td>
-                    <td>{{ p.ternom }}</td>
-                    <td>{{ p.ternif }}</td>
-                    <td>{{ p.terali }}</td>
-                    <td>{{ p.tertel }}</td>
-                    <td>{{ p.terdom }}</td>
-                    <td>{{ p.tercpo }}</td>
-                    <td>{{ p.terpob }}</td>
-                    <td>{{ p.tercoe }}</td>
-                    <td>{{ p.terobs }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
-    <div class="container-pag-wrap">
-        <div class="pagination-controls">
-            <button class="pag-btn" (click)="prevPagePro()" [disabled]="pagePro === 0">Anterior</button>
-            <span>Página</span>
-            <input
-            type="number"
-            min="1"
-            [max]="totalPagesPro"
-            [value]="pagePro + 1"
-            (change)="goToPagePro($event)"
-            class="pagination-input"
-            />
-            <span>de {{ totalPagesPro }}</span>
-            <button class="pag-btn" (click)="nextPagePro()" [disabled]="pagePro + 1 >= totalPagesPro">Siguiente</button>
         </div>
     </div>
 </div>
